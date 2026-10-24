@@ -237,6 +237,17 @@ class AuditEvent:
     def __post_init__(self) -> None:
         require_aware(self.timestamp)
 
+@dataclass
+class TrendState:
+    """Per-patient tracking for a continuous wearable-change episode."""
+
+    last_window_end: datetime | None = None
+    consecutive_count: int = 0
+    recent_assessment_ids: tuple[str, ...] = ()
+
+    # Prevent repeated tasks after an action is recorded while the
+    # same uninterrupted trend continues.
+    episode_notified: bool = False
 
 @dataclass
 class AppState:
@@ -251,6 +262,7 @@ class AppState:
     assessments: dict[str, Assessment] = field(default_factory=dict)
     reviews: dict[str, ReviewItem] = field(default_factory=dict)
     audit_events: list[AuditEvent] = field(default_factory=list)
+    trends: dict[str, TrendState] = field(default_factory=dict)
 
     # Used later to make application commands safe to repeat.
     processed_window_ids: set[str] = field(default_factory=set)

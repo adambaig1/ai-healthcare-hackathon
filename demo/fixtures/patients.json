@@ -1,0 +1,17 @@
+[
+  {
+    "id": "patient-001",
+    "name": "Alex Morgan",
+    "baseline_id": "baseline-001"
+  },
+  {
+    "id": "patient-002",
+    "name": "Sam Taylor",
+    "baseline_id": "baseline-002"
+  },
+  {
+    "id": "patient-003",
+    "name": "Jamie Ellis",
+    "baseline_id": "baseline-003"
+  }
+]

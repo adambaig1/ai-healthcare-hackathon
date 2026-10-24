@@ -1,0 +1,27 @@
+{
+  "dataset_id": "evaluation-wearable_disconnect",
+  "scenario": "wearable_disconnect",
+  "split": "evaluation",
+  "seed": 1044,
+  "synthetic": true,
+  "affected_patient_id": "patient-001",
+  "start_time": "2026-11-01T00:00:00+00:00",
+  "end_time": "2026-11-03T00:00:00+00:00",
+  "initial_simulated_time": "2026-11-01T04:00:00+00:00",
+  "event_onset": "2026-11-02T08:00:00+00:00",
+  "expected": {
+    "persistent_trend_expected": false,
+    "patient_review_expected": false,
+    "monitoring_unavailable_expected": true
+  },
+  "events": [
+    {
+      "timestamp": "2026-11-02T12:00:00+00:00",
+      "label": "First affected window becomes available"
+    },
+    {
+      "timestamp": "2026-11-02T16:00:00+00:00",
+      "label": "Following window becomes available"
+    }
+  ]
+}

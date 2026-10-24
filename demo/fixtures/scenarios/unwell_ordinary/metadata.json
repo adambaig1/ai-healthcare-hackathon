@@ -1,0 +1,27 @@
+{
+  "dataset_id": "scenarios-unwell_ordinary",
+  "scenario": "unwell_ordinary",
+  "split": "scenarios",
+  "seed": 145,
+  "synthetic": true,
+  "affected_patient_id": "patient-001",
+  "start_time": "2026-10-24T00:00:00+00:00",
+  "end_time": "2026-10-26T00:00:00+00:00",
+  "initial_simulated_time": "2026-10-24T04:00:00+00:00",
+  "event_onset": "2026-10-25T12:00:00+00:00",
+  "expected": {
+    "persistent_trend_expected": false,
+    "patient_review_expected": true,
+    "monitoring_unavailable_expected": false
+  },
+  "events": [
+    {
+      "timestamp": "2026-10-25T12:00:00+00:00",
+      "label": "Scripted unwell check-in"
+    },
+    {
+      "timestamp": "2026-10-25T16:00:00+00:00",
+      "label": "Following window becomes available"
+    }
+  ]
+}

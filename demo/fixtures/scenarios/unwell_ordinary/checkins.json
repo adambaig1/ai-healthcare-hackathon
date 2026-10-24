@@ -1,0 +1,12 @@
+[
+  {
+    "id": "833e0351-9a49-5208-b656-ff3fd5932ea3",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-25T12:00:00+00:00",
+    "feeling": "unwell",
+    "symptoms": [
+      "Feeling generally unwell"
+    ],
+    "temperature_c": null
+  }
+]
