@@ -127,7 +127,7 @@ def build_trend_figure(frame: pd.DataFrame) -> go.Figure:
         subplot_titles=(
             "Resting Heart Rate",
             "Activity (Steps)",
-            "Combined NEWS2 Score",
+            "Escalation Score",
         ),
     )
 

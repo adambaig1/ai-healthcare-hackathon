@@ -18,7 +18,7 @@ def test_sos_trigger_score():
     checkin = MockCheckin(feeling=Feeling.EXTREMELY_UNWELL, symptoms=[], temperature_c=37.0)
     score, reasons = evaluate_clinical_score(checkin, None)
     
-    assert score >= 4, "SOS button must immediately trigger NEWS2 threshold (>= 4)"
+    assert score >= 4, "SOS button must immediately trigger escalation threshold (>= 4)"
     assert any("Extremely Unwell" in r for r in reasons), "SOS reason must be logged for the Nurse Dashboard"
 
 def test_healthy_patient_score():

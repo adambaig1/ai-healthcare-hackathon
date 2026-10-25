@@ -215,7 +215,7 @@ def render_reviews(state: AppState, patient_id: str) -> None:
                 " · Last Updated: " + format_time(review.updated_at)
             )
 
-            st.markdown(r"#### Clinical Score Breakdown (NEWS2 Threshold $\ge$ 4)")
+            st.markdown(r"#### Clinical Score Breakdown (Escalation Threshold $\ge$ 4)")
             
             for reason in review.reasons:
                 st.write(f"• **{reason}**")
