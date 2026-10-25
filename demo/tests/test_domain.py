@@ -1,10 +1,11 @@
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from domain import AppState, Patient
 
 def test_app_state_initialization():
     state = AppState(
-        simulated_time=datetime.now(),
+        scenario_id="test-scenario",
+        simulated_time=datetime.now(timezone.utc),
         patients={
             "patient-001": Patient(id="patient-001", name="Alex Morgan", baseline_id="baseline-001")
         }

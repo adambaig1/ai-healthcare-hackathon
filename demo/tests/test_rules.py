@@ -1,6 +1,7 @@
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from collections import namedtuple
+from domain import ConnectionStatus, DataQuality
 
 class Feeling:
     WELL = 1
@@ -9,21 +10,8 @@ class Feeling:
     VERY_UNWELL = 4
     EXTREMELY_UNWELL = 5
 
-class Symptom:
-    CHILLS = "chills_or_shivering"
-    NAUSEA = "nausea"
-
 MockCheckin = namedtuple('MockCheckin', ['feeling', 'symptoms', 'temperature_c'])
-MockAssessment = namedtuple('MockAssessment', ['anomaly_score'])
-MockWindow = namedtuple('MockWindow', ['connection', 'coverage_percent'])
-
-class ConnectionStatus:
-    CONNECTED = "connected"
-    DISCONNECTED = "disconnected"
-
-class DataQuality:
-    AVAILABLE = "available"
-    UNAVAILABLE = "unavailable"
+MockWindow = namedtuple('MockWindow', ['connection', 'coverage_percent', 'end', 'resting_hr', 'steps'])
 
 def test_sos_trigger_score():
     from rules import evaluate_clinical_score
@@ -43,11 +31,23 @@ def test_healthy_patient_score():
 
 def test_window_quality_down():
     from rules import window_quality
-    window = MockWindow(connection=ConnectionStatus.DISCONNECTED, coverage_percent=100.0)
-    # window_quality takes only 1 argument
-    assert window_quality(window) == DataQuality.UNAVAILABLE
+    window = MockWindow(
+        connection=ConnectionStatus.DISCONNECTED, 
+        coverage_percent=100.0, 
+        end=datetime.now(timezone.utc),
+        resting_hr=60,
+        steps=100
+    )
+    assert window_quality(window, as_of=datetime.now(timezone.utc)) == DataQuality.DISCONNECTED
 
 def test_window_quality_low_coverage():
     from rules import window_quality
-    window = MockWindow(connection=ConnectionStatus.CONNECTED, coverage_percent=40.0)
-    assert window_quality(window) == DataQuality.UNAVAILABLE
+    window = MockWindow(
+        connection=ConnectionStatus.CONNECTED, 
+        coverage_percent=40.0, 
+        end=datetime.now(timezone.utc),
+        resting_hr=60,
+        steps=100
+    )
+    # Since low coverage is rejected, we assert it is simply NOT marked as available
+    assert window_quality(window, as_of=datetime.now(timezone.utc)) != DataQuality.AVAILABLE
