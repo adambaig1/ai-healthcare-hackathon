@@ -372,8 +372,12 @@ def render(state: AppState, detector=None) -> None:
     else:
         st.plotly_chart(
             build_trend_figure(frame),
-            width="stretch",
+            use_container_width=True,
             key=f"trends_{patient_id}",
+            config={
+                "displaylogo": False,
+                "scrollZoom": False,
+            },
         )
 
         st.caption(
