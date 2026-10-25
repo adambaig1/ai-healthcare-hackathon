@@ -117,4 +117,4 @@ To present the 28-day narrative effectively using the UI:
 *(Note: All team members have been added as collaborators to this repository.)*
 
 **Disclosures & Tools:**
-In accordance with the hackathon's "Disclose Everything" rule[cite: 15], we would like to transparently declare that this project was built with code generation, debugging, and documentation assistance from OpenAI (ChatGPT) and Google (Gemini).
+In accordance with the hackathon's rules, we would like to transparently declare that this project was built with code generation, debugging, and documentation assistance from OpenAI (ChatGPT) and Google (Gemini).
