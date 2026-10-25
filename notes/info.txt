@@ -1,0 +1,22 @@
+The Oncology Watch architecture is divided into three primary layers, driven by a time-simulated state controller rather than a traditional static database.
+
+Layer 1: Presentation (Streamlit UI)
+
+* Built with Streamlit, the frontend acts as two distinct portals: a Patient Interface (for symptom reporting) and a Nurse Dashboard (for clinical triage).
+* It relies on a global simulated clock. When the "Run to next event" button is clicked, the UI advances the simulated timeline, instantly updating the charts and triggering narrative pop-ups to guide the judges through the Day 14 emergency.
+
+Layer 2: State Management & Services
+
+* Instead of a heavy SQL database, the backend uses a Python-native, in-memory AppState controller. This securely tracks the active scenario, patient records, and check-in history.
+* The architecture relies on strict temporal validation. It enforces UTC-aware datetime objects across all functions (require_aware) to ensure medical timelines are perfectly synchronized without timezone bugs.
+* The services layer (e.g., submit_checkin) handles incoming data, generating unique, prefixed command IDs to prevent duplicate database entries if a patient double-clicks a button.
+
+Layer 3: The "AI" & Clinical Rules Engine
+
+* The Model: In this specific hackathon prototype, your "AI" is actually a robust, deterministic clinical rules engine built around the real-world NEWS2-like (National Early Warning Score) framework, paired with simulated anomaly scores. In 24-hour builds, it is standard practice to use hardcoded heuristic rules to represent the AI layer so you can prove the clinical workflow actually functions safely.
+* The Logic: The system merges continuous passive data with subjective active data. The evaluate_clinical_score function analyzes patient check-ins (instantly triggering a red alert if a patient feels "Extremely Unwell"). Simultaneously, the window_quality function evaluates the wearable hardware, automatically rejecting physiological data if the Bluetooth connection drops or if the patient wears the watch for less than the required coverage percentage.
+
+The Data
+
+* You are using a 100% synthetic dataset to strictly comply with the hackathon's "No Real Patient Data" rule.
+* The system contains three simulated patients. patient-001 (Alex Morgan) is loaded with a scripted 28-day trajectory of deteriorating health. patient-002 and patient-003 act as stable, healthy background noise to prove your dashboard doesn't throw false positives or hallucinate data for patients who haven't reported symptoms.

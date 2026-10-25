@@ -1,0 +1,15 @@
+1. Data Appropriateness and Privacy
+
+To ensure absolute zero risk of Protected Health Information (PHI) leakage and to strictly comply with the hackathon's "No Real Patient Data" rule, we engineered a 100% synthetic dataset. By generating our own realistic patient entities (patient-001 through patient-003) and their accompanying time-series clinical events, we proved our application's logic and UI functionality without ever touching sensitive data. In our prototype architecture, all state management is handled locally and temporarily in-memory, ensuring that no simulated health records are persistently stored or vulnerable to external exposure.
+
+2. Consent and Patient Transparency
+
+While using synthetic data bypasses the immediate legal need for patient consent, we designed the frontend interface to reflect best practices in patient transparency. The Patient View explicitly informs the user about what is being monitored (e.g., displaying exact wearable connection statuses and four-hour coverage percentages). Furthermore, the UI includes clear, persistent disclaimers managing patient expectations (e.g., "Submission does not mean a clinician has reviewed it," and "Follow your oncology contact instructions"). This ensures informed consent is maintained not just regarding data collection, but also regarding the system's clinical limitations.
+
+3. Mitigating Algorithmic and Systemic Bias
+
+Missing data is one of the largest sources of systemic bias in digital health, often disproportionately affecting elderly populations, rural patients, or those with lower digital literacy who may struggle to keep wearables charged or connected. We addressed this directly in our core data architecture:
+
+* No Hallucinations: Our system never attempts to guess, interpolate, or use AI to "fill in the blanks" for missing wearable data.
+* Strict Quality Gates: We implemented a window_quality rules engine that explicitly evaluates hardware performance. If a patient's wearable drops connection or achieves low coverage (e.g., worn for less than 80% of a monitoring window), the system purposefully flags the data as UNAVAILABLE rather than feeding fragmented, biased noise into the clinical scoring engine.
+* Rooted in Validated Science: For the prototype's core logic, we utilized the standardized NEWS2-like framework. By grounding our emergency alert triggers (the >= 4 threshold) in universally validated clinical guidelines rather than a black-box model trained on a potentially skewed demographic dataset, we ensure equitable triage for all patients regardless of background.
