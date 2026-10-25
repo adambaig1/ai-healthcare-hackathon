@@ -73,7 +73,7 @@ python -m venv .venv
 ### 2. Install Dependencies
 With your virtual environment active, install the required packages:
 ```bash
-pip install -r ../requirements.txt
+pip install -r requirements.txt
 ```
 
 ---
