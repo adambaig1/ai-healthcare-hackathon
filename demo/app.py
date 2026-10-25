@@ -97,7 +97,7 @@ def main() -> None:
         14: "Day 14: AI flags physiological deterioration. Alex checks in with fever and chills. RED ALERT triggered.",
         15: "Day 15: Nurse conducts review. Action recorded. Alex continues monitoring.",
         21: "Day 21: Alex's recovery observed. Vitals returning to baseline.",
-        28: "Day 28: Golden Path complete. Alex is stable."
+        28: "Day 28: Alex is stable."
     }
 
     with st.sidebar:
