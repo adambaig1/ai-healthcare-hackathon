@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from domain import ActionType, AppState, ReviewStatus, new_id
+from domain import ActionType, AppState, ReviewStatus, Symptom, new_id
 from monitoring import monitoring_summary
 from services import get_open_review, mark_seen, record_action
 from views.charts import build_chart_data, build_trend_figure
@@ -75,10 +75,11 @@ def render_patient_list(state: AppState) -> list[str]:
         rows.append(
             {
                 "Patient": patient.name,
-                "Review": (
-                    STATUS_LABELS[review.status]
-                    if review
-                    else "No open review"
+                "Status": (
+                    "EMERGENCY (SOS)" if review and review.status == ReviewStatus.NEW and any("Extremely Unwell" in r for r in review.reasons)
+                    else "FLAGGED (Review Needed)" if review and review.status == ReviewStatus.NEW 
+                    else "Under Review" if review and review.status == ReviewStatus.SEEN
+                    else "Stable"
                 ),
                 "Monitoring": monitoring["status"],
                 "Last usable measurement": monitoring["last_usable"],
@@ -109,10 +110,10 @@ def render_checkin(state: AppState, patient_id: str) -> None:
 
     latest = checkins[-1]
 
-    st.write(f"**Feeling:** {latest.feeling.value.capitalize()}")
+    st.write(f"**Feeling Score:** {latest.feeling.value}")
     st.write(
         "**Symptoms:** "
-        + (", ".join(latest.symptoms) or "None selected")
+        + (", ".join([Symptom(s).name.replace("_", " ").title() for s in latest.symptoms]) or "None selected")
     )
     st.write(
         "**Temperature:** "
@@ -136,10 +137,10 @@ def render_evidence(state: AppState, review) -> None:
             if checkin is not None:
                 st.markdown("**Patient check-in**")
                 st.caption(format_time(checkin.timestamp))
-                st.write(f"Feeling: {checkin.feeling.value}")
+                st.write(f"Feeling Score: {checkin.feeling.value}")
                 st.write(
                     "Symptoms: "
-                    + (", ".join(checkin.symptoms) or "None selected")
+                    + (", ".join([Symptom(s).name.replace("_", " ").title() for s in checkin.symptoms]) or "None selected")
                 )
 
                 if checkin.temperature_c is not None:
@@ -195,24 +196,36 @@ def render_reviews(state: AppState, patient_id: str) -> None:
         return
 
     for review in reviews:
+        
+        # Traffic light logic for the UI container
+        if review.status == ReviewStatus.NEW:
+            if any("Extremely Unwell" in r for r in review.reasons):
+                header = "EMERGENCY: Patient Triggered SOS"
+            else:
+                header = "URGENT: Patient Flagged for Review"
+        elif review.status == ReviewStatus.SEEN:
+            header = "Review in Progress"
+        else:
+            header = "Action Recorded"
+
         with st.container(border=True):
-            st.markdown(f"### {STATUS_LABELS[review.status]}")
+            st.markdown(f"### {header}")
             st.caption(
-                "Created: "
-                + format_time(review.created_at)
-                + " · Updated: "
-                + format_time(review.updated_at)
+                "Task Created: " + format_time(review.created_at) + 
+                " · Last Updated: " + format_time(review.updated_at)
             )
 
+            st.markdown(r"#### Clinical Score Breakdown (NEWS2 Threshold $\ge$ 4)")
+            
             for reason in review.reasons:
-                st.write(f"• {reason}")
+                st.write(f"• **{reason}**")
 
             if (
                 review.seen_at is not None
                 and review.updated_at > review.seen_at
                 and review.status == ReviewStatus.SEEN
             ):
-                st.info("This review has been updated since it was marked seen.")
+                st.info("New evidence has arrived since this review was marked seen.")
 
             render_evidence(state, review)
 

@@ -4,7 +4,7 @@ import streamlit as st
 
 from config import APP_NAME
 from simulation import (
-    advance_four_hours,
+    advance_one_day,
     create_demo,
     next_event_time,
     run_to_next_event,
@@ -13,10 +13,7 @@ from views import nurse, patient
 
 
 SCENARIO_LABELS = {
-    "sustained_change": "Sustained change",
-    "brief_exercise": "Brief exercise episode",
-    "wearable_disconnect": "Wearable disconnect",
-    "unwell_ordinary": "Unwell with ordinary readings",
+    "golden_path": "28-Day Chemo Narrative",
 }
 
 
@@ -93,15 +90,28 @@ def main() -> None:
     session = controller.session
     state = session.state
 
+    # Define the narrative text for your specific demo milestones
+    NARRATIVE_STORY = {
+        1: "Day 1: Chemotherapy starts. Alex Morgan establishes a healthy baseline.",
+        7: "Day 7: Alex feels mostly well. Vitals are stable. Coverage is high.",
+        14: "Day 14: AI flags physiological deterioration. Alex checks in with fever and chills. RED ALERT triggered.",
+        15: "Day 15: Nurse conducts review. Action recorded. Alex continues monitoring.",
+        21: "Day 21: Alex's recovery observed. Vitals returning to baseline.",
+        28: "Day 28: Golden Path complete. Alex is stable."
+    }
+
     with st.sidebar:
         finished = state.simulated_time >= session.scenario.end_time
+        
+        demo_start = session.scenario.start_time
+        current_day = (state.simulated_time - demo_start).days + 1
 
         if st.button(
-            "Advance four hours",
-            key="advance_four_hours",
+            "Advance 1 Day",
+            key="advance_one_day",
             disabled=finished,
         ):
-            advance_four_hours(controller)
+            advance_one_day(controller)
             st.rerun()
 
         if st.button(
@@ -110,7 +120,20 @@ def main() -> None:
             disabled=finished,
         ):
             run_to_next_event(controller)
+            
+            # Recalculate day after advancing to see if we hit a story milestone
+            new_day = (controller.session.state.simulated_time - demo_start).days + 1
+            if new_day in NARRATIVE_STORY:
+                st.session_state["story_toast"] = NARRATIVE_STORY[new_day]
+                
+                # 2. UX FIX: Auto-snap the Nurse dropdown back to Alex Morgan
+                # so the judges immediately see the emergency charts!
+                st.session_state["nurse_patient"] = "patient-001"
+            
             st.rerun()
+            
+        if "story_toast" in st.session_state:
+            st.toast(f" **Narrative Update:** {st.session_state.pop('story_toast')}")
 
         st.caption(
             "Simulated time: "

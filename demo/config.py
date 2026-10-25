@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-APP_NAME = "Oncology Watch"
+APP_NAME = "team 1234 proof of concept"
 
 PROJECT_DIR = Path(__file__).resolve().parent
 FIXTURES_DIR = PROJECT_DIR / "fixtures"

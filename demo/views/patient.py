@@ -6,18 +6,19 @@ from domain import (
     AppState,
     ConnectionStatus,
     Feeling,
+    Symptom,
     new_id,
 )
 from monitoring import monitoring_summary
 from services import submit_checkin
 
 
-PATIENT_ID = "patient-001"
-
 FEELING_LABELS = {
-    Feeling.USUAL: "About usual",
-    Feeling.WORSE: "Worse than usual",
-    Feeling.UNWELL: "Unwell",
+    Feeling.WELL: "1 - Well",
+    Feeling.MOSTLY_WELL: "2 - Mostly well",
+    Feeling.NOT_WELL: "3 - Not feeling well",
+    Feeling.VERY_UNWELL: "4 - Feeling very unwell",
+    Feeling.EXTREMELY_UNWELL: "5 - Feeling extremely unwell",
 }
 
 CONNECTION_LABELS = {
@@ -26,23 +27,19 @@ CONNECTION_LABELS = {
     ConnectionStatus.UNKNOWN: "Unknown",
 }
 
-SYMPTOMS = (
-    "Feeling generally unwell",
-    "Chills",
-    "Worsening fatigue",
-    "Other concern",
-)
+# Cleanly format the Enum names for the multiselect box
+SYMPTOMS = [s.name.replace("_", " ").title() for s in Symptom]
 
 
 def format_time(timestamp) -> str:
     return timestamp.strftime("%d %b %Y, %H:%M UTC")
 
 
-def latest_patient_window(state: AppState):
+def latest_patient_window(state: AppState, patient_id: str):
     windows = [
         window
         for window in state.windows.values()
-        if window.patient_id == PATIENT_ID
+        if window.patient_id == patient_id
         and window.end <= state.simulated_time
     ]
 
@@ -62,9 +59,9 @@ def render_contact_instructions() -> None:
     )
 
 
-def render_monitoring(state: AppState) -> None:
-    latest = latest_patient_window(state)
-    summary = monitoring_summary(state, PATIENT_ID)
+def render_monitoring(state: AppState, patient_id: str) -> None:
+    latest = latest_patient_window(state, patient_id)
+    summary = monitoring_summary(state, patient_id)
 
     with st.container(border=True):
         st.subheader("Wearable and monitoring")
@@ -124,7 +121,7 @@ def render_monitoring(state: AppState) -> None:
         )
 
 
-def render_unwell_action(state: AppState) -> None:
+def render_unwell_action(state: AppState, patient_id: str) -> None:
     with st.container(border=True):
         st.subheader("Feeling unwell?")
         render_contact_instructions()
@@ -132,14 +129,14 @@ def render_unwell_action(state: AppState) -> None:
         if st.button(
             "I feel unwell",
             type="primary",
-            key="report_unwell",
+            key=f"report_unwell_{patient_id}",
         ):
             try:
                 submit_checkin(
                     state,
                     command_id=new_id(),
-                    patient_id=PATIENT_ID,
-                    feeling=Feeling.UNWELL,
+                    patient_id=patient_id,
+                    feeling=Feeling.EXTREMELY_UNWELL.value,
                 )
             except ValueError as error:
                 st.error(f"Check-in was not saved: {error}")
@@ -152,11 +149,9 @@ def render_unwell_action(state: AppState) -> None:
                 )
 
 
-def render_checkin_form(state: AppState) -> None:
-    # Changing the form version after success gives the next submission
-    # fresh widgets. Failed validation keeps the current inputs intact.
+def render_checkin_form(state: AppState, patient_id: str) -> None:
     version = st.session_state.get("patient_form_version", 0)
-    prefix = f"patient_checkin_{version}"
+    prefix = f"patient_checkin_{patient_id}_{version}"
 
     with st.form(prefix):
         st.subheader("Daily check-in")
@@ -165,10 +160,10 @@ def render_checkin_form(state: AppState) -> None:
             "is not required."
         )
 
-        feeling = st.radio(
-            "How are you feeling?",
-            options=list(Feeling),
-            format_func=lambda value: FEELING_LABELS[value],
+        feeling_val = st.select_slider(
+            "How are you feeling today?",
+            options=[f.value for f in Feeling],
+            format_func=lambda value: FEELING_LABELS[Feeling(value)],
             key=f"{prefix}_feeling",
         )
 
@@ -214,13 +209,18 @@ def render_checkin_form(state: AppState) -> None:
         )
         return
 
+    # Map the selected string labels back to the enum values for storage
+    selected_symptom_enums = [
+        s.value for s in Symptom if s.name.replace("_", " ").title() in symptoms
+    ]
+
     try:
         submit_checkin(
             state,
             command_id=new_id(),
-            patient_id=PATIENT_ID,
-            feeling=feeling,
-            symptoms=tuple(symptoms),
+            patient_id=patient_id,
+            feeling=feeling_val,
+            symptoms=tuple(selected_symptom_enums),
             temperature_c=temperature,
         )
     except ValueError as error:
@@ -232,11 +232,11 @@ def render_checkin_form(state: AppState) -> None:
     st.rerun()
 
 
-def render_recent_checkins(state: AppState) -> None:
+def render_recent_checkins(state: AppState, patient_id: str) -> None:
     checkins = [
         checkin
         for checkin in state.checkins.values()
-        if checkin.patient_id == PATIENT_ID
+        if checkin.patient_id == patient_id
     ]
 
     st.subheader("Your recent check-ins")
@@ -247,9 +247,9 @@ def render_recent_checkins(state: AppState) -> None:
 
     latest = checkins[-1]
 
-    if latest.feeling == Feeling.UNWELL:
+    if latest.feeling >= Feeling.VERY_UNWELL.value:
         st.warning(
-            "Your latest check-in says you feel unwell. "
+            "Your latest check-in says you feel very unwell. "
             "Follow your oncology contact instructions rather than "
             "waiting for this demonstration to be reviewed."
         )
@@ -257,9 +257,9 @@ def render_recent_checkins(state: AppState) -> None:
     rows = [
         {
             "Submitted — UTC": format_time(checkin.timestamp),
-            "Feeling": FEELING_LABELS[checkin.feeling],
+            "Feeling": FEELING_LABELS[Feeling(checkin.feeling)],
             "Symptoms": (
-                ", ".join(checkin.symptoms)
+                ", ".join([Symptom(s).name.replace("_", " ").title() for s in checkin.symptoms])
                 if checkin.symptoms
                 else "None selected"
             ),
@@ -281,9 +281,18 @@ def render_recent_checkins(state: AppState) -> None:
 
 
 def render(state: AppState) -> None:
-    st.header("Patient")
+    st.header("Patient View")
 
-    patient = state.patients[PATIENT_ID]
+    # Add a dropdown to switch between patients
+    patient_ids = sorted(list(state.patients.keys()))
+    patient_id = st.selectbox(
+        "View App As",
+        options=patient_ids,
+        format_func=lambda pid: state.patients[pid].name,
+        key="patient_view_selector",
+    )
+
+    patient = state.patients[patient_id]
 
     st.subheader(f"Hello, {patient.name}")
     st.caption(
@@ -291,7 +300,7 @@ def render(state: AppState) -> None:
         + format_time(state.simulated_time)
     )
 
-    render_unwell_action(state)
+    render_unwell_action(state, patient_id)
 
     if st.session_state.pop("patient_submission_notice", False):
         st.success("Your check-in was saved to this demo.")
@@ -300,6 +309,8 @@ def render(state: AppState) -> None:
             "This prototype sends no calls or messages."
         )
 
-    render_monitoring(state)
-    render_checkin_form(state)
-    render_recent_checkins(state)
+    # UI REORDER: Check-ins are now placed above Wearable monitoring
+    render_checkin_form(state, patient_id)
+    render_recent_checkins(state, patient_id)
+    
+    render_monitoring(state, patient_id)

@@ -1,0 +1,247 @@
+[
+  {
+    "id": "7603f13f-93af-5c21-bb31-912e55b2a8eb",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-24T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.1
+  },
+  {
+    "id": "5506a36f-b554-539d-aed5-a0119e4c54a0",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-25T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.7
+  },
+  {
+    "id": "e0300e58-5db8-53ea-8c86-a8589dc33944",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-26T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.9
+  },
+  {
+    "id": "34a18922-1285-548b-b194-5ff168d00328",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-27T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.0
+  },
+  {
+    "id": "b529540b-8264-5983-b1a7-2cc9b7880a53",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-28T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.9
+  },
+  {
+    "id": "a3f31eea-c101-53d9-8c4d-33d0542fee62",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-29T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.1
+  },
+  {
+    "id": "a62db37d-e397-5c99-be08-c98d8780a8bc",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-30T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.9
+  },
+  {
+    "id": "0f2c97ca-e3a6-5bf4-8689-fbf2d84e9662",
+    "patient_id": "patient-001",
+    "timestamp": "2026-10-31T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.8
+  },
+  {
+    "id": "66a26917-34ab-5454-b7d6-a8dd0f079c92",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-01T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.1
+  },
+  {
+    "id": "be387f34-fc8e-56a1-8f3a-d20c3b28c3f9",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-02T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.2
+  },
+  {
+    "id": "1b3f7e45-7be8-575a-ba3d-38940b30b6ce",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-03T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "60dade4f-6afc-54fa-9e4b-7f83082e9ed9",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-04T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "38ac5f11-3ae6-5204-bb83-025b06e88b0b",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-05T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.9
+  },
+  {
+    "id": "11986a44-e60d-5727-bd70-0fe1c5e33373",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-06T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "5fa2b0c9-30d6-5350-b532-bbb7e911b3b8",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-07T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.6
+  },
+  {
+    "id": "7e67c1bb-f913-50eb-babb-bf370df47f07",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-08T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.2
+  },
+  {
+    "id": "2db1a0a9-555a-5aee-96f7-d8b7929785e1",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-09T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.5
+  },
+  {
+    "id": "f90a6b6b-d252-533d-b7e0-58b6f796bc2f",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-10T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.2
+  },
+  {
+    "id": "81022618-fcb7-54fd-b578-1fc070fbe61a",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-11T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.4
+  },
+  {
+    "id": "989638df-8fa5-5c2c-a8f6-9d239c68c4f3",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-12T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.3
+  },
+  {
+    "id": "4c477237-4e21-5ca8-a235-566c72131d0a",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-13T10:00:00+00:00",
+    "feeling": 4,
+    "symptoms": [
+      "chills_or_shivering",
+      "unusual_tiredness_or_weakness"
+    ],
+    "temperature_c": 38.2
+  },
+  {
+    "id": "6c671148-bab8-55c5-8149-a71b753329c8",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-14T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "199c84b3-8da0-59f9-beb7-1490b991016f",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-15T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "c0490530-cedd-5caa-94fa-2d0e66ecd324",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-16T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.0
+  },
+  {
+    "id": "781ea988-762c-5d71-b4ef-5343815c6be8",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-17T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.6
+  },
+  {
+    "id": "4b842bc5-5bab-5b7f-83ba-d1a8436a6ef2",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-18T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 37.1
+  },
+  {
+    "id": "8a75191b-847d-5e3f-9a40-117b0c9150ea",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-19T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.9
+  },
+  {
+    "id": "79269454-d33f-5f2f-897e-fb07a8e909f9",
+    "patient_id": "patient-001",
+    "timestamp": "2026-11-20T10:00:00+00:00",
+    "feeling": 2,
+    "symptoms": [],
+    "temperature_c": 36.7
+  }
+]

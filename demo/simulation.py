@@ -18,7 +18,7 @@ class DemoController:
 
 
 def create_demo(
-    scenario_name: str = "sustained_change",
+    scenario_name: str = "golden_path", 
     root: Path = FIXTURES_DIR,
 ) -> DemoController:
     """Create a fresh session and process its initial completed events."""
@@ -110,11 +110,11 @@ def advance_to(
     state.simulated_time = target
 
 
-def advance_four_hours(controller: DemoController) -> None:
+def advance_one_day(controller: DemoController) -> None:
     state = controller.session.state
 
     target = min(
-        state.simulated_time + timedelta(hours=4),
+        state.simulated_time + timedelta(hours=24), # Changed to 24 hours
         controller.session.scenario.end_time,
     )
 

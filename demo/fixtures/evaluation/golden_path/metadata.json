@@ -1,0 +1,21 @@
+{
+  "dataset_id": "evaluation-golden_path",
+  "scenario": "golden_path",
+  "split": "evaluation",
+  "seed": 1042,
+  "synthetic": true,
+  "affected_patient_id": "patient-001",
+  "start_time": "2026-11-01T00:00:00+00:00",
+  "end_time": "2026-11-29T00:00:00+00:00",
+  "initial_simulated_time": "2026-11-01T04:00:00+00:00",
+  "event_onset": "2026-11-15T00:00:00+00:00",
+  "expected": {
+    "patient_review_expected": true
+  },
+  "events": [
+    {
+      "timestamp": "2026-11-15T04:00:00+00:00",
+      "label": "Deterioration metrics trigger AI flag"
+    }
+  ]
+}

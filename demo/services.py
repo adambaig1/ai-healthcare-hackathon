@@ -13,7 +13,7 @@ from domain import (
     new_id,
 )
 from rules import (
-    concern_reasons,
+    evaluate_clinical_score,
     mark_review_seen,
     record_review_action,
 )
@@ -41,13 +41,12 @@ def get_open_review(
 
     return reviews[0] if reviews else None
 
-
 def submit_checkin(
     state: AppState,
     *,
     command_id: str,
     patient_id: str,
-    feeling: Feeling,
+    feeling: int,
     symptoms: tuple[str, ...] = (),
     temperature_c: float | None = None,
     checkin_id: str | None = None,
@@ -61,7 +60,7 @@ def submit_checkin(
     if patient_id not in state.patients:
         raise ValueError("Unknown patient.")
 
-    feeling = Feeling(feeling)
+    feeling_enum = Feeling(feeling)
 
     # Remove whitespace, blanks and repeated symptom selections.
     cleaned_symptoms = tuple(
@@ -81,12 +80,31 @@ def submit_checkin(
         id=record_id,
         patient_id=patient_id,
         timestamp=state.simulated_time,
-        feeling=feeling,
+        feeling=feeling_enum,
         symptoms=cleaned_symptoms,
         temperature_c=temperature_c,
     )
 
-    reasons = concern_reasons(checkin)
+    # In demo/services.py, inside submit_checkin()
+
+    # Find the most recent assessment for this patient
+    latest_assessment = next(
+        (
+            item for item in sorted(
+                state.assessments.values(), 
+                key=lambda x: x.timestamp, 
+                reverse=True
+            )
+            if item.patient_id == patient_id
+        ),
+        None
+    )
+
+    # Pass both to the rules engine to get the combined NEWS2 score
+    score, reasons = evaluate_clinical_score(
+        checkin=checkin, 
+        assessment=latest_assessment
+    )
 
     # Prepare and validate all records before changing state.
     events = [
@@ -95,13 +113,14 @@ def submit_checkin(
             actor=Actor.PATIENT,
             action="checkin_submitted",
             record_id=checkin.id,
-            details=f"Feeling: {checkin.feeling.value}.",
+            details=f"Feeling Score: {checkin.feeling.value}.",
         )
     ]
 
     review = None
 
-    if reasons:
+    # THRESHOLD LOGIC: Score must be >= 4 to trigger the ReviewItem
+    if score >= 4:
         existing = get_open_review(state, patient_id)
 
         if existing is None:
@@ -130,7 +149,7 @@ def submit_checkin(
                 actor=Actor.SYSTEM,
                 action=audit_action,
                 record_id=review.id,
-                details=f"Supporting check-in: {checkin.id}.",
+                details=f"Supporting check-in: {checkin.id} (Score: {score}).",
             )
         )
 
@@ -141,7 +160,6 @@ def submit_checkin(
 
     state.audit_events.extend(events)
     state.processed_command_ids.add(key)
-
 
 def mark_seen(
     state: AppState,

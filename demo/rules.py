@@ -14,22 +14,49 @@ from domain import (
     ReviewStatus,
 )
 
+from typing import Optional
+from domain import CheckIn, Assessment, Feeling, Symptom
 
-def concern_reasons(checkin: CheckIn) -> tuple[str, ...]:
-    """Temperature is displayed, but does not trigger a threshold rule."""
+def evaluate_clinical_score(
+    checkin: Optional[CheckIn] = None, 
+    assessment: Optional[Assessment] = None
+) -> tuple[int, list[str]]:
+    """Calculates a NEWS2-style score. >= 4 triggers a nurse review."""
+    score = 0
     reasons = []
 
-    if checkin.feeling == Feeling.UNWELL:
-        reasons.append("Patient reports feeling unwell.")
-    elif checkin.feeling == Feeling.WORSE:
-        reasons.append("Patient reports feeling worse than usual.")
+    # 1. AI Anomaly (+2 points)
+    if assessment and getattr(assessment, 'is_anomalous', False):
+        score += 2
+        reasons.append("+2: Wearable data indicates sustained abnormal trends (AI flagged)")
 
-    if checkin.symptoms:
-        reasons.append(
-            "Reported symptoms: " + ", ".join(checkin.symptoms) + "."
-        )
+    if checkin:
+        # 2. Feeling Score (3 = +1, 4 = +2, 5 = +3)
+# ... inside demo/rules.py ...
+        
+        # 2. Feeling Score (3 = +1, 4 = +2, 5 = +4)
+        if checkin.feeling == Feeling.NOT_WELL:
+            score += 1
+            reasons.append("+1: Patient reported feeling 'Not Well' (Score: 3)")
+        elif checkin.feeling == Feeling.VERY_UNWELL:
+            score += 2
+            reasons.append("+2: Patient reported feeling 'Very Unwell' (Score: 4)")
+        elif checkin.feeling == Feeling.EXTREMELY_UNWELL:
+            score += 4  # <--- CHANGED FROM 3 TO 4
+            reasons.append("+4: Patient reported feeling 'Extremely Unwell' (SOS Trigger)")
 
-    return tuple(reasons)
+        # 3. Symptoms (+2 points if any high-risk symptom is present)
+        if checkin.symptoms:
+            score += 2
+            symptom_names = ", ".join([Symptom(s).name.replace("_", " ").title() for s in checkin.symptoms])
+            reasons.append(f"+2: High-risk symptoms reported ({symptom_names})")
+
+        # 4. Temperature (+3 points if > 38.0)
+        if checkin.temperature_c is not None and checkin.temperature_c > 38.0:
+            score += 3
+            reasons.append(f"+3: Temperature meets escalation criteria ({checkin.temperature_c}°C)")
+
+    return score, tuple(reasons)
 
 
 def mark_review_seen(

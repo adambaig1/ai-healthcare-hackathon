@@ -1,18 +1,10 @@
 {
-  "generator_version": 1,
+  "generator_version": 2,
   "synthetic": true,
   "reference_rows": 252,
   "calibration_rows": 126,
-  "rows_per_scenario": 36,
-  "window_hours": 4,
-  "seed": 42,
+  "rows_per_scenario": 504,
   "notes": [
-    "All identities and measurements are fictional.",
-    "Empty CSV measurements mean missing, not zero.",
-    "Reference and calibration represent assumed stable periods.",
-    "Evaluation uses separate seeds and dates.",
-    "Evaluation shares generator assumptions with demo data.",
-    "Scenario expectations are not clinical labels.",
-    "No clinical performance claims are supported."
+    "Exclusive 28-day narrative dataset generated."
   ]
 }

@@ -223,13 +223,7 @@ def assess_window(
             assessment.id,
         )[-engine.settings.consecutive_windows:]
 
-    # Update or create the task before recording the completed assessment.
-    if persistent:
-        trend.episode_notified = update_trend_review(
-            state,
-            trend,
-            assessment,
-        )
+
 
     state.windows[window.id] = window
     state.assessments[assessment.id] = assessment

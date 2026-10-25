@@ -24,10 +24,28 @@ def require_finite(value: float | None, name: str) -> None:
         raise ValueError(f"{name} must be finite or None.")
 
 
-class Feeling(str, Enum):
-    USUAL = "usual"
-    WORSE = "worse"
-    UNWELL = "unwell"
+class Feeling(int, Enum):
+    WELL = 1
+    MOSTLY_WELL = 2
+    NOT_WELL = 3
+    VERY_UNWELL = 4
+    EXTREMELY_UNWELL = 5
+
+class Symptom(str, Enum):
+    FEVERISH = "feeling_feverish_hot_or_unusually_cold"
+    CHILLS = "chills_or_shivering"
+    FATIGUE = "unusual_tiredness_or_weakness"
+    COUGH = "new_or_worsening_cough"
+    BREATHLESSNESS = "new_or_worsening_breathlessness"
+    SORE_THROAT = "sore_throat_or_mouth_sores"
+    NAUSEA = "feeling_sick_nausea"
+    VOMITING = "being_sick_vomiting"
+    DIARRHOEA = "diarrhoea"
+    URINE_PAIN = "pain_or_burning_when_passing_urine"
+    LESS_URINE = "passing_less_urine_than_usual"
+    LINE_REDNESS = "redness_swelling_pain_or_discharge_around_wound_or_line"
+    DIZZINESS = "dizziness_or_feeling_faint"
+    NEW_PAIN = "new_or_worsening_pain"
 
 
 class ConnectionStatus(str, Enum):
@@ -108,13 +126,12 @@ class WearableWindow:
             if not 0 <= self.coverage_percent <= 100:
                 raise ValueError("coverage_percent must be between 0 and 100.")
 
-
 @dataclass(frozen=True)
 class CheckIn:
     patient_id: str
     timestamp: datetime
     feeling: Feeling
-    symptoms: tuple[str, ...] = ()
+    symptoms: tuple[Symptom, ...] = ()  # Updated to use the new Enum
     temperature_c: float | None = None
     id: str = field(default_factory=new_id)
 

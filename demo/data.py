@@ -16,17 +16,14 @@ from domain import (
     ConnectionStatus,
     Feeling,
     Patient,
+    Symptom,
     WearableWindow,
     require_aware,
 )
 
 
-SCENARIO_NAMES = (
-    "sustained_change",
-    "brief_exercise",
-    "wearable_disconnect",
-    "unwell_ordinary",
-)
+SCENARIO_NAMES = ("golden_path",)
+
 
 
 def parse_timestamp(value: str) -> datetime:
@@ -105,8 +102,8 @@ def load_checkins(path: Path) -> tuple[CheckIn, ...]:
             id=row["id"],
             patient_id=row["patient_id"],
             timestamp=parse_timestamp(row["timestamp"]),
-            feeling=Feeling(row["feeling"]),
-            symptoms=tuple(row["symptoms"]),
+            feeling=Feeling(int(row["feeling"])),
+            symptoms=tuple(Symptom(s) for s in row["symptoms"]),
             temperature_c=(
                 None
                 if row["temperature_c"] is None
