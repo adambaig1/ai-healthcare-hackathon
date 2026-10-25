@@ -104,3 +104,17 @@ To present the 28-day narrative effectively using the UI:
 2. In the Nurse view, select different patients to see how the system handles stable background data without false alarms.
 3. Click the **"Advance 1 Day"** or **"Run to next event"** buttons in the sidebar to simulate the passage of time.
 4. Watch for the automated Toast notifications! They will guide you through the story, automatically focusing the UI on the Day 14 deterioration event to demonstrate the AI and Rules Engine in action.
+
+---
+## Team & Acknowledgements
+
+**The Team:**
+* Abdalla Moustafa
+* Alexander Kuzmich
+* Gan Qi Jun
+* Mirza Adam Sher Baig
+
+*(Note: All team members have been added as collaborators to this repository.)*
+
+**Disclosures & Tools:**
+In accordance with the hackathon's "Disclose Everything" rule[cite: 15], we would like to transparently declare that this project was built with code generation, debugging, and documentation assistance from OpenAI (ChatGPT) and Google (Gemini).
